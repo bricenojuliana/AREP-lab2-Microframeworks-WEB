@@ -1,38 +1,31 @@
 package edu.escuelaing.arem.ASE.app;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class AppTest {
+
+    @BeforeEach
+    public void setup() {
+        // Limpiar los servicios antes de cada prueba
+        App.getServices().clear();
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
+    @Test
+    public void testGet() {
+        App.get("/test", (req, res) -> "test response");
+        assertEquals(1, App.getServices().size());
+        assertTrue(App.getServices().containsKey("/App/test"));
     }
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
+    @Test
+    public void testStaticFiles() {
+        App.staticfiles("src/test/resources");
+        assertEquals("src/test/resources", App.getStaticFilesLocation());
     }
+
 }
+
